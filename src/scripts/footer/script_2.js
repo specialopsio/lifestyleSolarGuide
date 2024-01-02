@@ -255,7 +255,6 @@ const playButton = document.querySelector('.play-button');
   const soundButton = document.querySelector('.sound-button');
   const fullscreenButton = document.querySelector('.fullscreen-button');
   const videoContainer = document.querySelector('.video-player');
-  let isFullScreen = false;
   
   playButton.addEventListener('click', function () {
     if (video.paused) {

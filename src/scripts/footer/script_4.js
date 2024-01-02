@@ -1,5 +1,3 @@
-let endData
-
 function createCharts() {
     const averageBillData = []
     let lastBill = endData && endData.bill ? parseInt(endData.bill) : 165
