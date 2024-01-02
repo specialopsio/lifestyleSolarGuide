@@ -13,6 +13,7 @@ const play = `<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0
 </svg>`;
   const thumbnailUrl = 'https://solarguidevideos.s3.us-east-2.amazonaws.com/thumbail2.jpg';
   let endData
+  let check_val = 'check'
   // Function to extract 'id' query parameter from the URL
   function getCustomerIdFromUrl() {
     const queryParams = new URLSearchParams(window.location.search);
