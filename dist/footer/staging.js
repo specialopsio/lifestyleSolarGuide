@@ -728,7 +728,6 @@ const play = `<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0
   function initLocal() {
     function waitForZip() {
       const data = endData
-      console.debug("DATA", data, endData)
       if (data && data.zip) {
         initMap(endData.zip)
       } else {
@@ -740,7 +739,6 @@ const play = `<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0
   }
 
   function initMap(zipCode = '15243') {
-    console.debug("INIT MAP")
     zipCode = document.getElementById('zip').textContent
     geocoder = new google.maps.Geocoder()
     let approximate_postcode = ''
