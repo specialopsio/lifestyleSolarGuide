@@ -1,0 +1,1 @@
+-1!==window.location.href.indexOf("https://test.com")&&console.log("123");
