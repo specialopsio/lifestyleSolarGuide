@@ -1,8 +1,8 @@
 {
-  "projectName": "test-proj",
-  "stagingUrl": "https://test.com",
-  "productionUrl": "https://test.com",
+  "projectName": "lifestyleSolarGuide",
+  "stagingUrl": "lsguide.webflow.io",
+  "productionUrl": "guide.lifestylesolar.com",
   "debug": true,
   "minify": true,
-  "functionnames": []
+  "functionNames": []
 }
