@@ -1,4 +1,4 @@
-  const play = `<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+const play = `<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
 <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd" />
 </svg>`;
   const pause = `<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -12,10 +12,144 @@
 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2" />
 </svg>`;
   const thumbnailUrl = 'https://solarguidevideos.s3.us-east-2.amazonaws.com/thumbail2.jpg';
+  let endData
+  // Function to extract 'id' query parameter from the URL
+  function getCustomerIdFromUrl() {
+    const queryParams = new URLSearchParams(window.location.search);
+    return queryParams.get("id");
+  }
+
+  // Function to fetch data using the customer ID
+  async function fetchData(customerId) {
+    const url = `https://hook.us1.make.com/1lqfj9g8jrgqnkwodbt7ctn8uywfdiht?customerId=${customerId}`;
+
+    try {
+      const response = await fetch(url);
+      const rawText = await response.text();
+      const sanitizedText = sanitizeJSON(rawText);
+      const data = JSON.parse(sanitizedText);
+
+      updateHtmlWithData(data);
+      displaySelectedAnswers(data.survey);
+      updateDisplayAfterFetch();
+      endData = data
+
+      // Load and play videos based on survey response
+      loadAndPlayVideos(data.survey);
+
+      return data;
+    } catch (error) {
+      console.error("Error:", error);
+      updateDisplayAfterFetch();
+    }
+  }
+
+  function sanitizeJSON(rawText) {
+    rawText = rawText
+      .replace(/\[,/g, "[null,")
+      .replace(/,\]/g, ",null]")
+      .replace(/,,/g, ",null,");
+    rawText = rawText.replace(/:\s*,/g, ": null,");
+    return rawText;
+  }
+
+  function safeRetrieve(obj, key) {
+    return obj && obj[key] ? obj[key] : "";
+  }
+
+  function updateHtmlWithData(data) {
+    if (!data) {
+      console.error("Received null or invalid data");
+      return;
+    }
+
+    for (let i = 1; i <= 4; i++) {
+      const surveyElement = document.getElementById(`survey${i}`);
+      if (surveyElement) {
+        surveyElement.textContent =
+          data.survey && data.survey.length >= i ? data.survey[i - 1] : "";
+      }
+    }
+
+    document.getElementById("zip").textContent = safeRetrieve(data, "zip");
+    document.getElementById("zip2").textContent = safeRetrieve(data, "zip");
+    document.getElementById("zip3").textContent = safeRetrieve(data, "zip");
+    updateRepresentativeInfo(data.rep || {});
+  }
+
+  function updateRepresentativeInfo(rep) {
+    const repPhoneElement = document.getElementById("repPhone");
+    const repEmailElement = document.getElementById("repEmail");
+    const repContactElement = document.getElementById("repContact");
+    const repPictureElement = document.getElementById("repPicture");
+
+    document.getElementById("repName").textContent = safeRetrieve(rep, "name");
+    document.getElementById("contactRepName").textContent = safeRetrieve(rep, "name");
+
+    // Update phone
+    if (rep.phone) {
+      const formattedPhone = rep.phone.replace(/[ \(\)\-\+]/g, "");
+      repPhoneElement.textContent = rep.phone;
+      repPhoneElement.href = `tel:${formattedPhone}`;
+      repPhoneElement.style.display = "block";
+    } else {
+      repPhoneElement.style.display = "none";
+      document.getElementById("contactRepPhoneContainer").style.display = "none";
+    }
+
+    // Update email
+    if (rep.email) {
+      repEmailElement.href = `mailto:${rep.email}`;
+      repEmailElement.style.display = "block";
+      document.getElementById("contactRepEmail").textContent = rep.email;
+    } else {
+      repEmailElement.style.display = "none";
+      document.getElementById("contactRepEmailContainer").style.display = "none";
+    }
+
+    // Update picture
+    if (rep.picture) {
+      repPictureElement.src = rep.picture;
+      repPictureElement.style.display = "block";
+      document.getElementById("contactRepPhone").textContent = rep.phone;
+    } else {
+      repPictureElement.style.display = "none";
+    }
+
+    // Hide contact elements if both phone and email are missing
+    if (!rep.phone && !rep.email) {
+      repPhoneElement.style.display = "none";
+      repEmailElement.style.display = "none";
+      if (repContactElement) {
+        repContactElement.style.display = "none";
+      }
+    }
+  }
+
+  function updateDisplayAfterFetch() {
+    document.getElementById("loader").style.display = "none";
+    document.getElementById("app").style.display = "block";
+  }
+
+  function displaySelectedAnswers(surveyData) {
+    for (let questionNumber = 1; questionNumber <= surveyData.length; questionNumber++) {
+      const selectedAnswer = surveyData[questionNumber - 1] + 1;
+      const questionSection = document.getElementById(`q${questionNumber}`);
+
+      if (questionSection) {
+        const answerDivs = questionSection.querySelectorAll('div[answer]');
+        answerDivs.forEach(div => {
+          const answerNumber = parseInt(div.getAttribute('answer'));
+          if (answerNumber !== selectedAnswer) {
+            div.style.display = 'none';
+          }
+        });
+      }
+    }
+  }
   let isFullScreen = false
   let isPaused = false
   let isMuted = false
-  let endData
 
   async function loadOverlay() {
     const vidCon = document.querySelector('.video-player')
@@ -325,139 +459,6 @@
       }
     }
   });
-  // Function to extract 'id' query parameter from the URL
-  function getCustomerIdFromUrl() {
-    const queryParams = new URLSearchParams(window.location.search);
-    return queryParams.get("id");
-  }
-
-  // Function to fetch data using the customer ID
-  async function fetchData(customerId) {
-    const url = `https://hook.us1.make.com/1lqfj9g8jrgqnkwodbt7ctn8uywfdiht?customerId=${customerId}`;
-
-    try {
-      const response = await fetch(url);
-      const rawText = await response.text();
-      const sanitizedText = sanitizeJSON(rawText);
-      const data = JSON.parse(sanitizedText);
-
-      updateHtmlWithData(data);
-      displaySelectedAnswers(data.survey);
-      updateDisplayAfterFetch();
-
-      // Load and play videos based on survey response
-      loadAndPlayVideos(data.survey);
-
-      return data;
-    } catch (error) {
-      console.error("Error:", error);
-      updateDisplayAfterFetch();
-    }
-  }
-
-  function sanitizeJSON(rawText) {
-    rawText = rawText
-      .replace(/\[,/g, "[null,")
-      .replace(/,\]/g, ",null]")
-      .replace(/,,/g, ",null,");
-    rawText = rawText.replace(/:\s*,/g, ": null,");
-    return rawText;
-  }
-
-  function safeRetrieve(obj, key) {
-    return obj && obj[key] ? obj[key] : "";
-  }
-
-  function updateHtmlWithData(data) {
-    if (!data) {
-      console.error("Received null or invalid data");
-      return;
-    }
-
-    for (let i = 1; i <= 4; i++) {
-      const surveyElement = document.getElementById(`survey${i}`);
-      if (surveyElement) {
-        surveyElement.textContent =
-          data.survey && data.survey.length >= i ? data.survey[i - 1] : "";
-      }
-    }
-
-    document.getElementById("zip").textContent = safeRetrieve(data, "zip");
-    document.getElementById("zip2").textContent = safeRetrieve(data, "zip");
-    document.getElementById("zip3").textContent = safeRetrieve(data, "zip");
-    updateRepresentativeInfo(data.rep || {});
-  }
-
-  function updateRepresentativeInfo(rep) {
-    const repPhoneElement = document.getElementById("repPhone");
-    const repEmailElement = document.getElementById("repEmail");
-    const repContactElement = document.getElementById("repContact");
-    const repPictureElement = document.getElementById("repPicture");
-
-    document.getElementById("repName").textContent = safeRetrieve(rep, "name");
-    document.getElementById("contactRepName").textContent = safeRetrieve(rep, "name");
-
-    // Update phone
-    if (rep.phone) {
-      const formattedPhone = rep.phone.replace(/[ \(\)\-\+]/g, "");
-      repPhoneElement.textContent = rep.phone;
-      repPhoneElement.href = `tel:${formattedPhone}`;
-      repPhoneElement.style.display = "block";
-    } else {
-      repPhoneElement.style.display = "none";
-      document.getElementById("contactRepPhoneContainer").style.display = "none";
-    }
-
-    // Update email
-    if (rep.email) {
-      repEmailElement.href = `mailto:${rep.email}`;
-      repEmailElement.style.display = "block";
-      document.getElementById("contactRepEmail").textContent = rep.email;
-    } else {
-      repEmailElement.style.display = "none";
-      document.getElementById("contactRepEmailContainer").style.display = "none";
-    }
-
-    // Update picture
-    if (rep.picture) {
-      repPictureElement.src = rep.picture;
-      repPictureElement.style.display = "block";
-      document.getElementById("contactRepPhone").textContent = rep.phone;
-    } else {
-      repPictureElement.style.display = "none";
-    }
-
-    // Hide contact elements if both phone and email are missing
-    if (!rep.phone && !rep.email) {
-      repPhoneElement.style.display = "none";
-      repEmailElement.style.display = "none";
-      if (repContactElement) {
-        repContactElement.style.display = "none";
-      }
-    }
-  }
-
-  function updateDisplayAfterFetch() {
-    document.getElementById("loader").style.display = "none";
-    document.getElementById("app").style.display = "block";
-  }
-
-  function displaySelectedAnswers(surveyData) {
-    for (let questionNumber = 1; questionNumber <= surveyData.length; questionNumber++) {
-      const selectedAnswer = surveyData[questionNumber - 1] + 1;
-      const questionSection = document.getElementById(`q${questionNumber}`);
-
-      if (questionSection) {
-        const answerDivs = questionSection.querySelectorAll('div[answer]');
-        answerDivs.forEach(div => {
-          const answerNumber = parseInt(div.getAttribute('answer'));
-          if (answerNumber !== selectedAnswer) {
-            div.style.display = 'none';
-          }
-        });
-      }
-    }
-  }
 
   function createCharts() {
     const averageBillData = []
@@ -727,6 +728,7 @@
   function initLocal() {
     function waitForZip() {
       const data = endData
+      console.debug("DATA", data, endData)
       if (data && data.zip) {
         initMap(endData.zip)
       } else {
@@ -738,6 +740,7 @@
   }
 
   function initMap(zipCode = '15243') {
+    console.debug("INIT MAP")
     zipCode = document.getElementById('zip').textContent
     geocoder = new google.maps.Geocoder()
     let approximate_postcode = ''
@@ -823,6 +826,7 @@
 
   document.addEventListener("DOMContentLoaded", () => {
     initLocal()
+    console.debug('local loaded')
     const factsElement = document.getElementById(
       'local');
     if (factsElement) {

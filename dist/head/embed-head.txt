@@ -1,11 +1,13 @@
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCSzXo4HrIVIr7PgsvG7rWd3M0kBUFlnFU"></script>
+<script src='https://apis.google.com/js/client.js'></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-deferred@2.0.0/dist/chartjs-plugin-deferred.min.js"></script>
 
 <!-- Production JS -->
-<script src="https://cdn.jsdelivr.net/gh/undefined/lifestyleSolarGuide@latest/dist/head/prod.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/specialopsio/lifestyleSolarGuide@latest/dist/head/prod.js"></script>
 
 <!-- Staging JS -->
-<script src="https://cdn.jsdelivr.net/gh/undefined/lifestyleSolarGuide@latest/dist/head/staging.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/specialopsio/lifestyleSolarGuide@latest/dist/head/staging.js"></script>
 
 <!-- CSS File -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/undefined/lifestyleSolarGuide@latest/dist/head/style.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/specialopsio/lifestyleSolarGuide@latest/dist/head/style.min.css">
