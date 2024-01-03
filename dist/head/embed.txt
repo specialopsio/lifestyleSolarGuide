@@ -7,7 +7,7 @@
 <script src="https://unpkg.com/lifestylesolarguide@latest/dist/head/prod.js"></script>
 
 <!-- Staging JS -->
-<script src="https://unpkg.com/lifestylesolarguid@elatest/dist/head/staging.js"></script>
+<script src="https://unpkg.com/lifestylesolarguide@latest/dist/head/staging.js"></script>
 
 <!-- CSS File -->
 <link rel="stylesheet" href="https://unpkg.com/lifestylesolarguide@latest/dist/head/style.min.css">
