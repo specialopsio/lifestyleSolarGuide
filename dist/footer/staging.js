@@ -1,4 +1,5 @@
-const play = `<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+if (window.location.href.indexOf("lsguide.webflow.io") !== -1) {
+  const play = `<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
 <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd" />
 </svg>`;
   const pause = `<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -13,7 +14,6 @@ const play = `<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0
 </svg>`;
   const thumbnailUrl = 'https://solarguidevideos.s3.us-east-2.amazonaws.com/thumbail2.jpg';
   let endData
-  let vidPaused = true
   // Function to extract 'id' query parameter from the URL
   function getCustomerIdFromUrl() {
     const queryParams = new URLSearchParams(window.location.search);
@@ -284,10 +284,7 @@ const play = `<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0
       if (event) {
         event.stopPropagation();
       }
-      if(event.target === volumeSlider){
-        return
-      }
-      if (vidPaused) {
+      if (vidElem.paused) {
         overlay.style.display = 'none'
         if (vidElem.src !== `${s3_base}/${videoClips[currentClipIndex]}`) {
           loadVideoClip(videoClips[currentClipIndex])
@@ -296,14 +293,12 @@ const play = `<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0
         music.play()
         playButton.innerHTML = pause
       } else {
-        console.debug("PLAY VID")
         vidElem.pause()
         if (!isMuted) {
           music.pause()
         }
         playButton.innerHTML = play
       }
-      vidPaused = !vidPaused
     }
 
     function preloadVideoClip(index) {
@@ -320,7 +315,6 @@ const play = `<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0
         vidElem = preLoadedVideo
       } else {
         if (vidElem.src !== videoSrc) {
-            console.debug('srcs', vidElem.src, videoSrc)
           vidElem.src = videoSrc
           vidElem.load()
           preloadVideoClip(currentClipIndex)
@@ -390,7 +384,6 @@ const play = `<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0
         music.play()
         vidElem.removeEventListener('loadedmetadata', onVideoLoaded)
         playButton.innerHTML = pause
-        vidPaused = false
       }
     });
 
@@ -734,12 +727,15 @@ const play = `<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0
   let geocoder
 
   function initLocal() {
+    console.debug("INIT LOCAL")
+
     function waitForZip() {
       const data = endData
-      console.debug("DATA", data, endData)
       if (data && data.zip) {
+        console.debug("no wait", endData)
         initMap(endData.zip)
       } else {
+        console.debug("wait")
         setTimeout(waitForZip, 100)
       }
     }
@@ -748,7 +744,6 @@ const play = `<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0
   }
 
   function initMap(zipCode = '15243') {
-    console.debug("INIT MAP")
     zipCode = document.getElementById('zip').textContent
     geocoder = new google.maps.Geocoder()
     let approximate_postcode = ''
@@ -847,3 +842,4 @@ const play = `<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0
         'Element with ID #localMap not found.');
     }
   })
+};
