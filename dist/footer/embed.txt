@@ -1,0 +1,7 @@
+
+
+<!-- Production JS -->
+<script src="https://unpkg.com/lifestylesolarguidelatest/dist/footer/prod.js"></script>
+
+<!-- Staging JS -->
+<script src="https://unpkg.com/lifestylesolarguidelatest/dist/footer/staging.js"></script>

@@ -1,8 +1,8 @@
 {
-  "projectName": "lifestyleSolarGuide",
   "stagingUrl": "lsguide.webflow.io",
   "productionUrl": "guide.lifestylesolar.com",
   "debug": true,
   "minify": true,
-  "functionNames": []
+  "head_embed": "\n<!-- Production JS -->\n<script src=\"https://unpkg.com/lifestylesolarguide@latest/dist/head/prod.js\"></script>\n\n<!-- Staging JS -->\n<script src=\"https://unpkg.com/lifestylesolarguide@latest/dist/head/staging.js\"></script>\n\n<!-- CSS File -->\n<link rel=\"stylesheet\" href=\"https://unpkg.com/lifestylesolarguide@latest/dist/head/style.min.css\">\n",
+  "footer_embed": "\n<!-- Production JS -->\n<script src=\"https://unpkg.com/lifestylesolarguide@latest/dist/footer/prod.js\"></script>\n\n<!-- Staging JS -->\n<script src=\"https://unpkg.com/lifestylesolarguide@latest/dist/footer/staging.js\"></script>\n"
 }

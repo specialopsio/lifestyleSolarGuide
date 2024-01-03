@@ -1,12 +1,12 @@
 {
-  "name": "webflowcompiler",
+  "name": "lifestylesolarguide",
   "version": "1.0.0",
   "description": "Compile script files and push to CDN",
   "main": "setup.js",
   "type": "module",
   "scripts": {
     "setup": "node setup.js",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "node test.js",
     "build": "gulp",
     "build-prod": "gulp build-prod-commit",
     "build-staging": "gulp build-staging-commit",
@@ -20,18 +20,19 @@
     "commit-dist": "gulp commit-dist",
     "commit-script": "gulp commit-scripts",
     "commit": "gulp commit-all",
-    "rand": "gulp"
+    "rand": "gulp",
+    "combine-embeds": "gulp combine-embeds"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/BuiltByQuantum/webflowCompiler.git"
+    "url": "git+https://github.com/specialopsio/lifestylesolarmap.git"
   },
   "author": "0 + R",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/BuiltByQuantum/webflowCompiler/issues"
+    "url": "https://github.com/specialopsio/lifestylesolarmap/issues"
   },
-  "homepage": "https://github.com/BuiltByQuantum/webflowCompiler#readme",
+  "homepage": "https://github.com/specialopsio/lifestylesolarmap#readme",
   "dependencies": {
     "browser-sync": "^2.27.7",
     "gulp": "^4.0.2",

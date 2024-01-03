@@ -1,6 +1,0 @@
-
-<!-- Production JS -->
-<script src="https://cdn.jsdelivr.net/gh/undefined/lifestyleSolarGuide@latest/dist/footer/prod.js"></script>
-
-<!-- Staging JS -->
-<script src="https://cdn.jsdelivr.net/gh/undefined/lifestyleSolarGuide@latest/dist/footer/staging.js"></script>
