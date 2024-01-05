@@ -1,14 +1,11 @@
 let map
 let geocoder
 function initLocal() {
-    console.debug("INIT LOCAL")
     function waitForZip() {
         const data = endData
         if (data && data.zip) {
-            console.debug("no wait", endData)
             initMap(endData.zip)
         } else {
-            console.debug("wait")
             setTimeout(waitForZip, 100)
         }
     }
@@ -31,7 +28,6 @@ function initMap(zipCode = '15243'){
     }
     geocoder.geocode({ 'address': zipCode }, function(results, status) {
         if (status == 'OK') {
-            console.debug("RESULTS", results)
             map.setCenter(results[0].geometry.location)
             approximate_postcode = results[0].postcode_localities[0]
             if(approximate_postcode){
@@ -94,7 +90,6 @@ let observer_two = new IntersectionObserver(onIntersection, {
 
 document.addEventListener("DOMContentLoaded", () => {
     initLocal()
-    console.debug('local loaded')
     const factsElement = document.getElementById(
         'local');
     if (factsElement) {

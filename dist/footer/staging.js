@@ -205,7 +205,7 @@ if (window.location.href.indexOf("lsguide.webflow.io") !== -1) {
       }
     })
 
-    playButton.addEventListener('click', playPressed);
+    // playButton.addEventListener('click', playPressed);
     vidCon.addEventListener('click', playPressed)
 
     soundButton.addEventListener('click', function(event) {
@@ -727,15 +727,12 @@ if (window.location.href.indexOf("lsguide.webflow.io") !== -1) {
   let geocoder
 
   function initLocal() {
-    console.debug("INIT LOCAL")
 
     function waitForZip() {
       const data = endData
       if (data && data.zip) {
-        console.debug("no wait", endData)
         initMap(endData.zip)
       } else {
-        console.debug("wait")
         setTimeout(waitForZip, 100)
       }
     }
@@ -764,7 +761,6 @@ if (window.location.href.indexOf("lsguide.webflow.io") !== -1) {
       'address': zipCode
     }, function(results, status) {
       if (status == 'OK') {
-        console.debug("RESULTS", results)
         map.setCenter(results[0].geometry.location)
         approximate_postcode = results[0].postcode_localities[0]
         if (approximate_postcode) {
@@ -829,7 +825,6 @@ if (window.location.href.indexOf("lsguide.webflow.io") !== -1) {
 
   document.addEventListener("DOMContentLoaded", () => {
     initLocal()
-    console.debug('local loaded')
     const factsElement = document.getElementById(
       'local');
     if (factsElement) {
