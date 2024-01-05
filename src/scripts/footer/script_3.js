@@ -1,6 +1,7 @@
 let isFullScreen = false
 let isPaused = false
 let isMuted = false
+let vidPaused = false
 
 async function loadOverlay() {
     const vidCon = document.querySelector('.video-player')
@@ -132,24 +133,25 @@ async function loadAndPlayVideos(surveyResponse) {
 
     async function playPressed(event) {
         if (event) {
-            event.stopPropagation();
+          event.stopPropagation();
         }
-        if (vidElem.paused) {
-            overlay.style.display = 'none'
-            if (vidElem.src !== `${s3_base}/${videoClips[currentClipIndex]}`) {
-                loadVideoClip(videoClips[currentClipIndex])
-            }
-            vidElem.play()
-            music.play()
-            playButton.innerHTML = pause
+        if (!vidPaused) {
+          overlay.style.display = 'none'
+          if (vidElem.src !== `${s3_base}/${videoClips[currentClipIndex]}`) {
+            loadVideoClip(videoClips[currentClipIndex])
+          }
+          vidElem.play()
+          music.play()
+          playButton.innerHTML = pause
         } else {
-            vidElem.pause()
-            if (!isMuted) {
-                music.pause()
-            }
-            playButton.innerHTML = play
+          vidElem.pause()
+          if (!isMuted) {
+            music.pause()
+          }
+          playButton.innerHTML = play
         }
-    }
+        vidPaused = !vidPaused
+      }
 
     function preloadVideoClip(index) {
         if (index < videoClips.length - 1) {
