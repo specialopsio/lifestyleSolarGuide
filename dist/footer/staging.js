@@ -230,6 +230,11 @@ isPaused = !isPaused
 soundButton.innerHTML = isPaused ? mute : sound
 
 })
+volumeSlider.addEventListener('click', function(event){
+  if(event){
+      event.stopPropagation();
+  }
+})
 volumeSlider.addEventListener('input', function(event) {
 if (event) {
   event.stopPropagation();
@@ -249,37 +254,36 @@ if (volume == 0) {
 }
 })
 
-fullscreenButton.addEventListener('click', function(event) {
-if (event) {
-  event.stopPropagation();
-}
-if (!isFullScreen) {
-  if (vidCon.requestFullscreen) {
-    vidCon.requestFullscreen()
-  } else if (vidCon.webkitRequestFullscreen) {
-    vidCon.webkitRequestFullscreen()
-  } else if (vidCon.mozRequestFullScreen) {
-    vidCon.mozRequestFullScreen()
-  } else if (vidCon.msRequestFullscreen) {
-    vidCon.msRequestFullscreen()
-  } else if (vidCon.webkitEnterFullscreen) {
-    vidCon.webkitEnterFullscreen()
-  } else if (vidElem.webkitEnterFullScreen) {
-    vidElem.webkitEnterFullscreen()
+fullscreenButton.addEventListener('click', (event) => {
+  if (event) {
+    event.stopPropagation();
   }
-} else {
-  if (document.exitFullscreen) {
-    document.exitFullscreen()
-  } else if (document.mozCancelFullScreen) {
-    document.mozCancelFullScreen()
-  } else if (document.webkitExitFullscreen) {
-    document.webkitExitFullscreen()
-  } else if (document.msExitFullscreen) {
-    document.msExitFullscreen()
+  if (!document.fullscreenElement) {
+    if (vidCon.requestFullscreen) {
+      vidCon.requestFullscreen()
+    } else if (vidCon.webkitRequestFullscreen) {
+      vidCon.webkitRequestFullscreen()
+    } else if (vidCon.mozRequestFullScreen) {
+      vidCon.mozRequestFullScreen()
+    } else if (vidCon.msRequestFullscreen) {
+      vidCon.msRequestFullscreen()
+    } else if (vidCon.webkitEnterFullscreen) {
+      vidCon.webkitEnterFullscreen()
+    } else if (vidElem.webkitEnterFullScreen) {
+      vidElem.webkitEnterFullscreen()
+    }
+  } else {
+    if (document.exitFullscreen) {
+      document.exitFullscreen()
+    } else if (document.mozCancelFullScreen) {
+      document.mozCancelFullScreen()
+    } else if (document.webkitExitFullscreen) {
+      document.webkitExitFullscreen()
+    } else if (document.msExitFullscreen) {
+      document.msExitFullscreen()
+    }
   }
-}
-isFullScreen = !isFullScreen
-});
+  })
 
 let preLoadedVideo = null
 
@@ -442,30 +446,6 @@ video.currentTime = time;
 soundButton.addEventListener('click', function() {
 video.muted = !video.muted;
 soundButton.innerHTML = video.muted ? mute : sound;
-});
-
-fullscreenButton.addEventListener('click', function() {
-if (!isFullScreen) {
-if (video.requestFullscreen) {
-  video.requestFullscreen();
-} else if (video.webkitRequestFullscreen) {
-  /* Safari */
-  video.webkitRequestFullscreen();
-} else if (video.msRequestFullscreen) {
-  /* IE11 */
-  video.msRequestFullscreen();
-}
-} else {
-if (document.exitFullscreen) {
-  document.exitFullscreen();
-} else if (document.webkitExitFullscreen) {
-  /* Safari */
-  document.webkitExitFullscreen();
-} else if (document.msExitFullscreen) {
-  /* IE11 */
-  document.msExitFullscreen();
-}
-}
 });
 
 function createCharts() {
