@@ -1,17 +1,70 @@
 let map
 let geocoder
-function initLocal() {
+    function initLocal() {
+
     function waitForZip() {
         const data = endData
         if (data && data.zip) {
             initMap(endData.zip)
+            fetchLocalData(endData.zip)
         } else {
             setTimeout(waitForZip, 100)
         }
+        }
+        
+        waitForZip()
+    }
+    
+    async function fetchLocalData(zipCode) {
+        const url = `https://rk2ou3xhpk.execute-api.us-east-1.amazonaws.com/default/fetchPostal?zipCode=${zipCode}`;
+    
+        try {
+            const response = await fetch(url);
+            const resp_json = await response.json();
+        if(resp_json.carbon_offset_metric_tons){
+            set_local_data(resp_json)
+        } else {
+            document.getElementById('localStats').style.display = 'none'
+        }
+        if(resp_json.incentives){
+            setIncentives()
+        } else {
+            document.getElementById('localIncentives').style.display = 'none'
+        }
+            return resp_json;
+        } catch (error) {
+            document.querySelector('.local-focus').style.display = 'none'
+            console.error("Error in fetch:", error);
+        }
+    }
+    
+    function formatMK(num){
+        if(num >= 1000000){
+            return {'num': (num/1000000).toFixed(2), 'suff': 'm'}
+        } else if(num >= 1000){
+            return {'num': (num / 1000).toFixed(2), 'suff': 'k'}
+        } else {
+            return {'num': num.toFixed(2), 'suff': ''}
+        }
+    }
+    
+    function setIncentives(incentives){
+      return true
+    }
+    
+    function set_local_data(local_data){
+      const co2_tonnage = formatMK(local_data.carbon_offset_metric_tons)
+      const tree_abatement = formatMK(local_data.carbon_offset_metric_tons/0.039)
+      const car_abatement = formatMK(local_data.carbon_offset_metric_tons/4.73)
+      document.getElementById('c02').childNodes[0].textContent = co2_tonnage.num
+      document.getElementById('cars').childNodes[0].textContent = car_abatement.num
+      document.getElementById('trees').childNodes[0].textContent = tree_abatement.num
+      document.getElementById('c02').childNodes[1].textContent = co2_tonnage.suff
+      document.getElementById('cars').childNodes[1].textContent = car_abatement.suff
+      document.getElementById('trees').childNodes[1].textContent = tree_abatement.suff
+    
     }
 
-    waitForZip()
-}
 function initMap(zipCode = '15243'){
     zipCode = document.getElementById('zip').textContent
     geocoder = new google.maps.Geocoder()
