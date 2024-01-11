@@ -730,25 +730,30 @@ waitForZip()
 
 async function fetchLocalData(zipCode) {
 const url = `https://rk2ou3xhpk.execute-api.us-east-1.amazonaws.com/default/fetchPostal?zipCode=${zipCode}`;
-
 try {
+let stateCode;
 const response = await fetch(url);
 const resp_json = await response.json();
+const incentives = resp_json.incentives.data
 if(resp_json.carbon_offset_metric_tons){
-  set_local_data(resp_json)
+  stateCode = set_local_data(resp_json)
 } else {
   document.getElementById('localStats').style.display = 'none'
 }
-if(resp_json.incentives){
-  setIncentives()
+if(incentives){
+  setIncentives(incentives)
 } else {
-  document.getElementById('localIncentives').style.display = 'none'
+  // document.getElementById('localIncentives').style.display = 'none'
 }
 return resp_json;
 } catch (error) {
   document.querySelector('.local-focus').style.display = 'none'
 console.error("Error in fetch:", error);
 }
+}
+
+function fetchStateCode(){
+
 }
 
 function formatMK(num){
@@ -761,7 +766,26 @@ if(num >= 1000000){
 }
 }
 
-function setIncentives(incentives){
+async function setIncentives(incentives){
+  let table2List = document.querySelector('.table2_list')
+  let templateItem = table2List.childNodes[0]
+  let templateItemCom = table2List.childNodes[2]
+  while (table2List.firstChild) {
+    table2List.removeChild(table2List.firstChild)
+  }
+  incentives.forEach(incentive => {
+    const inc_name = incentive.name
+    const inc_type = incentive.typeObj.name
+    const inc_sector = incentive.parameterSets[0] ? incentive.parameterSets[0].sectors[0].name : "Other"
+    const read_more_link = incentive.websiteUrl
+    let temp_item = inc_sector === "Residential" ? templateItem.cloneNode(true) : templateItemCom.cloneNode(true)
+    temp_item.childNodes[0].childNodes[0].textContent = inc_name
+    temp_item.childNodes[1].childNodes[0].textContent = inc_sector
+    temp_item.childNodes[2].childNodes[0].textContent = inc_type
+    read_more_link ? temp_item.childNodes[3].childNodes[0].href = read_more_link : temp_item.childNodes[3].childNodes[0].textContent = ''
+    table2List.appendChild(temp_item)
+  })
+
   return true
 }
 
@@ -775,6 +799,7 @@ function set_local_data(local_data){
   document.getElementById('c02').childNodes[1].textContent = co2_tonnage.suff
   document.getElementById('cars').childNodes[1].textContent = car_abatement.suff
   document.getElementById('trees').childNodes[1].textContent = tree_abatement.suff
+  return name_code_mapping[local_data.state_name]
 
 }
 
