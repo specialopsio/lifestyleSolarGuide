@@ -1,4 +1,4 @@
-if (window.location.href.indexOf("lsguide.webflow.io") !== -1) {
+// if (window.location.href.indexOf("lsguide.webflow.io") !== -1) {
   const play = `<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
 <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd" />
 </svg>`;
@@ -792,8 +792,21 @@ if (window.location.href.indexOf("lsguide.webflow.io") !== -1) {
       return 0
     });
 
-    let useTemplateItem = true
-    incentives.forEach(incentive => {
+    const residentialIncentives = incentives.filter(incentive => {
+      return incentive.parameterSets[0] && incentive.parameterSets[0].sectors[0].name === "Residential";
+    });
+
+    const commercialIncentives = incentives.filter(incentive => {
+        return incentive.parameterSets[0] && incentive.parameterSets[0].sectors[0].name === "Commercial";
+    }).slice(0, 4)
+
+    const unknownIncentives = incentives.filter(incentive => {
+        return !incentive.parameterSets[0] || incentive.parameterSets[0].sectors[0].name === "--";
+    }).slice(0, 3)
+
+    const sortedIncentives = [...residentialIncentives, ...commercialIncentives, ...unknownIncentives];
+
+    sortedIncentives.forEach(incentive => {
       const inc_name = incentive.name
       const inc_type = incentive.typeObj.name
       const inc_sector = incentive.parameterSets[0] ? incentive.parameterSets[0].sectors[0].name : "--"
@@ -803,14 +816,13 @@ if (window.location.href.indexOf("lsguide.webflow.io") !== -1) {
         return
       }
 
-      let temp_item = useTemplateItem ? templateItem.cloneNode(true) : templateItemCom.cloneNode(true);
+      let temp_item = inc_sector === "Residential" ? templateItem.cloneNode(true) : templateItemCom.cloneNode(true)
       temp_item.childNodes[0].childNodes[0].textContent = inc_name
-      temp_item.querySelectorAll('.table2_column')[1].textContent = inc_sector
+      inc_sector === "--" ? temp_item.querySelectorAll('.table2_column')[1].textContent = inc_sector : temp_item.childNodes[1].childNodes[0].textContent = inc_sector
       temp_item.childNodes[2].childNodes[0].textContent = inc_type
       temp_item.childNodes[3].childNodes[0].href = read_more_link
 
       table2List.appendChild(temp_item)
-      useTemplateItem = !useTemplateItem
     })
 
     return true
@@ -1035,4 +1047,4 @@ if (window.location.href.indexOf("lsguide.webflow.io") !== -1) {
     current_inputs = new_inputs
     return new_inputs
   }
-};
+// };

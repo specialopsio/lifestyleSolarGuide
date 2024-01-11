@@ -55,44 +55,56 @@ let geocoder
             let table2List = document.querySelector('.table2_list')
             let templateItem = table2List.childNodes[0]
             let templateItemCom = table2List.childNodes[2]
-          
+        
             while (table2List.firstChild) {
-                table2List.removeChild(table2List.firstChild)
+              table2List.removeChild(table2List.firstChild)
             }
-          
+        
             incentives.sort((a, b) => {
-                const sectorA = a.parameterSets[0] ? a.parameterSets[0].sectors[0].name : "--"
-                const sectorB = b.parameterSets[0] ? b.parameterSets[0].sectors[0].name : "--"
-          
-                if (sectorA === sectorB) return 0;
-                if (sectorA === "Residential") return -1
-                if (sectorB === "Residential") return 1
-                if (sectorA === "Commercial") return -1
-                if (sectorB === "Commercial") return 1
-                return 0
+              const sectorA = a.parameterSets[0] ? a.parameterSets[0].sectors[0].name : "--"
+              const sectorB = b.parameterSets[0] ? b.parameterSets[0].sectors[0].name : "--"
+        
+              if (sectorA === sectorB) return 0;
+              if (sectorA === "Residential") return -1
+              if (sectorB === "Residential") return 1
+              if (sectorA === "Commercial") return -1
+              if (sectorB === "Commercial") return 1
+              return 0
             });
-          
-            let useTemplateItem = true
-            incentives.forEach(incentive => {
-                const inc_name = incentive.name
-                const inc_type = incentive.typeObj.name
-                const inc_sector = incentive.parameterSets[0] ? incentive.parameterSets[0].sectors[0].name : "--"
-                const read_more_link = incentive.websiteUrl
-          
-                if (!read_more_link) {
-                    return
-                }
-          
-                let temp_item = useTemplateItem ? templateItem.cloneNode(true) : templateItemCom.cloneNode(true);
-                temp_item.childNodes[0].childNodes[0].textContent = inc_name
-                temp_item.querySelectorAll('.table2_column')[1].textContent = inc_sector
-                temp_item.childNodes[2].childNodes[0].textContent = inc_type
-                temp_item.childNodes[3].childNodes[0].href = read_more_link
-          
-                table2List.appendChild(temp_item)
-                useTemplateItem = !useTemplateItem
+        
+            const residentialIncentives = incentives.filter(incentive => {
+              return incentive.parameterSets[0] && incentive.parameterSets[0].sectors[0].name === "Residential";
+            });
+        
+            const commercialIncentives = incentives.filter(incentive => {
+                return incentive.parameterSets[0] && incentive.parameterSets[0].sectors[0].name === "Commercial";
+            }).slice(0, 4)
+        
+            const unknownIncentives = incentives.filter(incentive => {
+                return !incentive.parameterSets[0] || incentive.parameterSets[0].sectors[0].name === "--";
+            }).slice(0, 3)
+        
+            const sortedIncentives = [...residentialIncentives, ...commercialIncentives, ...unknownIncentives];
+        
+            sortedIncentives.forEach(incentive => {
+              const inc_name = incentive.name
+              const inc_type = incentive.typeObj.name
+              const inc_sector = incentive.parameterSets[0] ? incentive.parameterSets[0].sectors[0].name : "--"
+              const read_more_link = incentive.websiteUrl
+        
+              if (!read_more_link) {
+                return
+              }
+        
+              let temp_item = inc_sector === "Residential" ? templateItem.cloneNode(true) : templateItemCom.cloneNode(true)
+              temp_item.childNodes[0].childNodes[0].textContent = inc_name
+              inc_sector === "--" ? temp_item.querySelectorAll('.table2_column')[1].textContent = inc_sector : temp_item.childNodes[1].childNodes[0].textContent = inc_sector
+              temp_item.childNodes[2].childNodes[0].textContent = inc_type
+              temp_item.childNodes[3].childNodes[0].href = read_more_link
+        
+              table2List.appendChild(temp_item)
             })
-          
+        
             return true
           }
         
@@ -109,7 +121,7 @@ let geocoder
             document.getElementById('trees').childNodes[1].textContent = tree_abatement.suff
           }
 
-function initMap(zipCode = '15243'){
+function initMap(zipCode = '15203'){
     zipCode = document.getElementById('zip').textContent
     geocoder = new google.maps.Geocoder()
     let approximate_postcode = ''
@@ -175,7 +187,7 @@ function zoomToZipCode() {
 function onIntersection(entries) {
     entries.forEach(entry => {
         if (entry.isIntersecting) {
-            zoomToZipCode('15243')
+            zoomToZipCode('15203')
             observer_two.unobserve(entry.target)
         }
     })
