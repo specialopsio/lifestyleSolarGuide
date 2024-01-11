@@ -345,6 +345,9 @@
         music.currentTime = 0
       }
     })
+    document.addEventListener("visibilitychange", () => {
+      music.pause();
+    });
 
     function timeUpdate() {
       if (music.paused && !vidElem.paused) {
