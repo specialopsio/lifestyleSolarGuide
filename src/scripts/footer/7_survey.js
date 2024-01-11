@@ -76,7 +76,7 @@ function waitForEndData() {
       base_inputs = randomizeSelectInputs()
       loadAndPlayVideos(base_inputs)
       initMap()
-      fetchLocalData("15243")
+      fetchLocalData("15203")
       document.getElementById('reset').style.display = 'none'
     }
   }
