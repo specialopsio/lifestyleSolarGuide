@@ -179,3 +179,6 @@
   .w--current {
     color: black !important;
   }
+  .table2_item:nth-child(even) {
+    background-color: #00000008; /* Slightly darker gray for even rows */
+}
