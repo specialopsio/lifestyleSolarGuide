@@ -1,4 +1,3 @@
-
 function waitForEndData() {
     return new Promise((resolve, reject) => {
       const checkData = () => {
@@ -38,7 +37,7 @@ function waitForEndData() {
   await setBaseSelectInputs()
   document.getElementById('random').addEventListener('click', randomizeSelectInputs)
   document.getElementById('reset').addEventListener('click', resetSelectedInputs)
-  if(queryParams.get("admin")){
+  if(queryParams.get("admin") || queryParams.get('id') === 'admin'){
     document.getElementById('survey').style.display = 'block'
   }
   })
@@ -64,7 +63,7 @@ function waitForEndData() {
   }
   async function setBaseSelectInputs(){
     const queryParams = new URLSearchParams(window.location.search)
-    if(queryParams.get('id')){
+    if(queryParams.get('id') && queryParams.get('id') !== 'admin'){
       const base_data = await waitForEndData()
       base_inputs = [...base_data.survey]
       current_inputs = [...base_data.survey]

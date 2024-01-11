@@ -42,7 +42,9 @@ loadAndPlayVideos(data.survey);
 return data;
 } catch (error) {
 console.error("Error:", error);
-updateDisplayAfterFetch();
+if(new URLSearchParams(window.location.search).get('id') === 'admin'){
+  updateDisplayAfterFetch();
+}
 }
 }
 
@@ -739,7 +741,7 @@ if(resp_json.carbon_offset_metric_tons){
   document.getElementById('localStats').style.display = 'none'
 }
 if(incentives){
-  setIncentives(incentives)
+  setIncentives(incentives, resp_json.incentives.recordsFiltered)
 } else {
   // document.getElementById('localIncentives').style.display = 'none'
 }
@@ -761,27 +763,47 @@ if(num >= 1000000){
 }
 }
 
-async function setIncentives(incentives){
+async function setIncentives(incentives, incentives_total) {
+  document.querySelector('.incentivetotal').textContent = incentives_total
   let table2List = document.querySelector('.table2_list')
   let templateItem = table2List.childNodes[0]
   let templateItemCom = table2List.childNodes[2]
+
   while (table2List.firstChild) {
-    table2List.removeChild(table2List.firstChild)
+      table2List.removeChild(table2List.firstChild)
   }
+
+  incentives.sort((a, b) => {
+      const sectorA = a.parameterSets[0] ? a.parameterSets[0].sectors[0].name : "--"
+      const sectorB = b.parameterSets[0] ? b.parameterSets[0].sectors[0].name : "--"
+
+      if (sectorA === sectorB) return 0;
+      if (sectorA === "Residential") return -1
+      if (sectorB === "Residential") return 1
+      if (sectorA === "Commercial") return -1
+      if (sectorB === "Commercial") return 1
+      return 0
+  });
+
+  let useTemplateItem = true
   incentives.forEach(incentive => {
-    const inc_name = incentive.name
-    const inc_type = incentive.typeObj.name
-    const inc_sector = incentive.parameterSets[0] ? incentive.parameterSets[0].sectors[0].name : "--"
-    const read_more_link = incentive.websiteUrl
-    if(!read_more_link){
-      return
-    }
-    let temp_item = inc_sector === "Residential" ? templateItem.cloneNode(true) : templateItemCom.cloneNode(true)
-    temp_item.childNodes[0].childNodes[0].textContent = inc_name
-    inc_sector === "--" ? temp_item.querySelectorAll('.table2_column')[1].textContent = inc_sector : temp_item.childNodes[1].childNodes[0].textContent = inc_sector
-    temp_item.childNodes[2].childNodes[0].textContent = inc_type
-    read_more_link ? temp_item.childNodes[3].childNodes[0].href = read_more_link : temp_item.childNodes[3].childNodes[0].textContent = ''
-    table2List.appendChild(temp_item)
+      const inc_name = incentive.name
+      const inc_type = incentive.typeObj.name
+      const inc_sector = incentive.parameterSets[0] ? incentive.parameterSets[0].sectors[0].name : "--"
+      const read_more_link = incentive.websiteUrl
+
+      if (!read_more_link) {
+          return
+      }
+
+      let temp_item = useTemplateItem ? templateItem.cloneNode(true) : templateItemCom.cloneNode(true);
+      temp_item.childNodes[0].childNodes[0].textContent = inc_name
+      temp_item.querySelectorAll('.table2_column')[1].textContent = inc_sector
+      temp_item.childNodes[2].childNodes[0].textContent = inc_type
+      temp_item.childNodes[3].childNodes[0].href = read_more_link
+
+      table2List.appendChild(temp_item)
+      useTemplateItem = !useTemplateItem
   })
 
   return true
@@ -938,7 +960,7 @@ surveySelects.forEach(select => {
 await setBaseSelectInputs()
 document.getElementById('random').addEventListener('click', randomizeSelectInputs)
 document.getElementById('reset').addEventListener('click', resetSelectedInputs)
-if(queryParams.get("admin")){
+if(queryParams.get("admin") || queryParams.get('id') === 'admin'){
   document.getElementById('survey').style.display = 'block'
 }
 })
@@ -964,7 +986,7 @@ function displaySelectedAnswer(questionNumber, selectedAnswer) {
 }
 async function setBaseSelectInputs(){
   const queryParams = new URLSearchParams(window.location.search)
-  if(queryParams.get('id')){
+  if(queryParams.get('id') && queryParams.get('id') !== 'admin'){
     const base_data = await waitForEndData()
     base_inputs = [...base_data.survey]
     current_inputs = [...base_data.survey]

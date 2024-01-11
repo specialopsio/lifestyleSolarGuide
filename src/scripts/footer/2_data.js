@@ -25,7 +25,9 @@
                 return data;
             } catch (error) {
                 console.error("Error:", error);
-                updateDisplayAfterFetch();
+                if(new URLSearchParams(window.location.search).get('id') === 'admin'){
+                    updateDisplayAfterFetch();
+                }
             }
         }
 
