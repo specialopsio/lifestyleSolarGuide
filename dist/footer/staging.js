@@ -1,4 +1,4 @@
-// if (window.location.href.indexOf("lsguide.webflow.io") !== -1) {
+if (window.location.href.indexOf("lsguide.webflow.io") !== -1) {
   const play = `<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
 <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd" />
 </svg>`;
@@ -739,7 +739,7 @@
         document.getElementById('localStats').style.display = 'none'
       }
       if (incentives) {
-        setIncentives(incentives, resp_json.incentives.recordsFiltered)
+        setIncentives(incentives)
       } else {
         // document.getElementById('localIncentives').style.display = 'none'
       }
@@ -770,8 +770,7 @@
     }
   }
 
-  async function setIncentives(incentives, incentives_total) {
-    document.querySelector('.incentivetotal').textContent = incentives_total
+  async function setIncentives(incentives) {
     let table2List = document.querySelector('.table2_list')
     let templateItem = table2List.childNodes[0]
     let templateItemCom = table2List.childNodes[2]
@@ -793,17 +792,18 @@
     });
 
     const residentialIncentives = incentives.filter(incentive => {
-      return incentive.parameterSets[0] && incentive.parameterSets[0].sectors[0].name === "Residential";
+      return incentive.parameterSets[0] && incentive.parameterSets[0].sectors[0].name === "Residential" && incentive.websiteUrl;
     });
 
     const commercialIncentives = incentives.filter(incentive => {
-        return incentive.parameterSets[0] && incentive.parameterSets[0].sectors[0].name === "Commercial";
+      return incentive.parameterSets[0] && incentive.parameterSets[0].sectors[0].name === "Commercial" && incentive.websiteUrl;
     }).slice(0, 4)
 
     const unknownIncentives = incentives.filter(incentive => {
-        return !incentive.parameterSets[0] || incentive.parameterSets[0].sectors[0].name === "--";
+      return !incentive.parameterSets[0] || incentive.parameterSets[0].sectors[0].name === "--" && incentive.websiteUrl;
     }).slice(0, 3)
 
+    document.querySelector('.incentivetotal').textContent = residentialIncentives.length + commercialIncentives.length + unknownIncentives.length - 1
     const sortedIncentives = [...residentialIncentives, ...commercialIncentives, ...unknownIncentives];
 
     sortedIncentives.forEach(incentive => {
@@ -841,7 +841,7 @@
     document.getElementById('trees').childNodes[1].textContent = tree_abatement.suff
   }
 
-  function initMap(zipCode = '15243') {
+  function initMap(zipCode = '15203') {
     zipCode = document.getElementById('zip').textContent
     geocoder = new google.maps.Geocoder()
     let approximate_postcode = ''
@@ -863,7 +863,7 @@
     }, function(results, status) {
       if (status == 'OK') {
         map.setCenter(results[0].geometry.location)
-        approximate_postcode = results[0].postcode_localities[0]
+        approximate_postcode = results[0].address_components[0].long_name
         if (approximate_postcode) {
           const zips = [document.getElementById('zip'), document.getElementById('zip2')]
           zips.forEach((zip) => {
@@ -914,7 +914,7 @@
   function onIntersection(entries) {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
-        zoomToZipCode('15243')
+        zoomToZipCode('15203')
         observer_two.unobserve(entry.target)
       }
     })
@@ -1017,7 +1017,7 @@
       base_inputs = randomizeSelectInputs()
       loadAndPlayVideos(base_inputs)
       initMap()
-      fetchLocalData("15243")
+      fetchLocalData("15203")
       document.getElementById('reset').style.display = 'none'
     }
   }
@@ -1047,4 +1047,4 @@
     current_inputs = new_inputs
     return new_inputs
   }
-// };
+};

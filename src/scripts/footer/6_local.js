@@ -28,7 +28,7 @@ let geocoder
           document.getElementById('localStats').style.display = 'none'
         }
         if(incentives){
-            setIncentives(incentives, resp_json.incentives.recordsFiltered)
+            setIncentives(incentives)
         } else {
           // document.getElementById('localIncentives').style.display = 'none'
         }
@@ -50,20 +50,19 @@ let geocoder
         }
         }
         
-        async function setIncentives(incentives, incentives_total) {
-            document.querySelector('.incentivetotal').textContent = incentives_total
+        async function setIncentives(incentives) {
             let table2List = document.querySelector('.table2_list')
             let templateItem = table2List.childNodes[0]
             let templateItemCom = table2List.childNodes[2]
-        
+            
             while (table2List.firstChild) {
               table2List.removeChild(table2List.firstChild)
             }
-        
+            
             incentives.sort((a, b) => {
               const sectorA = a.parameterSets[0] ? a.parameterSets[0].sectors[0].name : "--"
               const sectorB = b.parameterSets[0] ? b.parameterSets[0].sectors[0].name : "--"
-        
+              
               if (sectorA === sectorB) return 0;
               if (sectorA === "Residential") return -1
               if (sectorB === "Residential") return 1
@@ -71,19 +70,20 @@ let geocoder
               if (sectorB === "Commercial") return 1
               return 0
             });
-        
+            
             const residentialIncentives = incentives.filter(incentive => {
-              return incentive.parameterSets[0] && incentive.parameterSets[0].sectors[0].name === "Residential";
+              return incentive.parameterSets[0] && incentive.parameterSets[0].sectors[0].name === "Residential" && incentive.websiteUrl;
             });
-        
+            
             const commercialIncentives = incentives.filter(incentive => {
-                return incentive.parameterSets[0] && incentive.parameterSets[0].sectors[0].name === "Commercial";
+              return incentive.parameterSets[0] && incentive.parameterSets[0].sectors[0].name === "Commercial" && incentive.websiteUrl;
             }).slice(0, 4)
-        
+            
             const unknownIncentives = incentives.filter(incentive => {
-                return !incentive.parameterSets[0] || incentive.parameterSets[0].sectors[0].name === "--";
+              return !incentive.parameterSets[0] || incentive.parameterSets[0].sectors[0].name === "--" && incentive.websiteUrl;
             }).slice(0, 3)
-        
+            
+            document.querySelector('.incentivetotal').textContent = residentialIncentives.length + commercialIncentives.length + unknownIncentives.length - 1
             const sortedIncentives = [...residentialIncentives, ...commercialIncentives, ...unknownIncentives];
         
             sortedIncentives.forEach(incentive => {
@@ -138,7 +138,7 @@ function initMap(zipCode = '15203'){
     geocoder.geocode({ 'address': zipCode }, function(results, status) {
         if (status == 'OK') {
             map.setCenter(results[0].geometry.location)
-            approximate_postcode = results[0].postcode_localities[0]
+            approximate_postcode = results[0].address_components[0].long_name
             if(approximate_postcode){
                 const zips = [document.getElementById('zip'), document.getElementById('zip2')]
                 zips.forEach((zip) => {
