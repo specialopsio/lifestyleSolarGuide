@@ -13,4 +13,5 @@ const mute = `<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none
 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2" />
 </svg>`;
 const thumbnailUrl = 'https://solarguidevideos.s3.us-east-2.amazonaws.com/thumbail2.jpg';
+let videoClips = ['Intro.mp4', `Q1A1.mp4`, `Q2A1.mp4`, `Q3A1.mp4`, `Q4A1.mp4`, 'Outro.mp4']
 let endData

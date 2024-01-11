@@ -13,6 +13,7 @@ const mute = `<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none
 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2" />
 </svg>`;
 const thumbnailUrl = 'https://solarguidevideos.s3.us-east-2.amazonaws.com/thumbail2.jpg';
+let videoClips = ['Intro.mp4', `Q1A1.mp4`, `Q2A1.mp4`, `Q3A1.mp4`, `Q4A1.mp4`, 'Outro.mp4']
 let endData
 // Function to extract 'id' query parameter from the URL
 function getCustomerIdFromUrl() {
@@ -169,8 +170,8 @@ vidCon.appendChild(overlay)
 }
 
 async function loadAndPlayVideos(surveyResponse) {
-const videoClips = ['Intro.mp4', ...surveyResponse.map((ans, i) => `Q${i+1}A${ans+1}.mp4`),
-'Outro.mp4'
+videoClips = ['Intro.mp4', ...surveyResponse.map((ans, i) => `Q${i+1}A${ans+1}.mp4`),
+  'Outro.mp4'
 ]
 const clipDuration = 30
 const totalDuration = videoClips.length * clipDuration
@@ -291,9 +292,7 @@ async function playPressed(event) {
 if (event) {
   event.stopPropagation();
 }
-console.debug('vid elem', vidElem)
 if (!vidPaused) {
-  console.debug('paused')
   overlay.style.display = 'none'
   if (vidElem.src !== `${s3_base}/${videoClips[currentClipIndex]}`) {
     loadVideoClip(videoClips[currentClipIndex])
@@ -302,7 +301,6 @@ if (!vidPaused) {
   music.play()
   playButton.innerHTML = pause
 } else {
-  console.debug("not paused")
   vidElem.pause()
   if (!isMuted) {
     music.pause()
@@ -745,6 +743,7 @@ if(incentives){
 } else {
   // document.getElementById('localIncentives').style.display = 'none'
 }
+document.querySelector('.local-focus').style.display = 'block'
 return resp_json;
 } catch (error) {
   document.querySelector('.local-focus').style.display = 'none'
@@ -897,4 +896,116 @@ console.error(
   'Element with ID #localMap not found.');
 }
 })
+
+
+
+function waitForEndData() {
+  return new Promise((resolve, reject) => {
+    const checkData = () => {
+      const data = endData
+      if (data && data.survey) {
+        resolve(data)
+      } else {
+        setTimeout(checkData, 100)
+      }
+    };
+    checkData()
+  })
+}
+
+
+let base_inputs = []
+let current_inputs = []
+document.addEventListener("DOMContentLoaded", async () => {
+const queryParams = new URLSearchParams(window.location.search)
+const surveySelects = document.querySelectorAll('#survey select')
+const handleSelectChange = (event) => {
+  const selectedIndex = event.target.selectedIndex
+  const selectIndex = Array.from(surveySelects).indexOf(event.target)
+  current_inputs[selectIndex] = selectedIndex
+  endData ? endData.survey[selectIndex] = selectedIndex : ''
+  videoClips = ['Intro.mp4', ...current_inputs.map((ans, i) => `Q${i+1}A${ans}.mp4`),
+        'Outro.mp4'
+    ]
+  displaySelectedAnswer(selectIndex + 1, selectedIndex)
+
+};
+
+surveySelects.forEach(select => {
+  select.addEventListener('change', handleSelectChange)
+})
+
+await setBaseSelectInputs()
+document.getElementById('random').addEventListener('click', randomizeSelectInputs)
+document.getElementById('reset').addEventListener('click', resetSelectedInputs)
+if(queryParams.get("admin")){
+  document.getElementById('survey').style.display = 'block'
+}
+})
+
+function displaySelectedAnswer(questionNumber, selectedAnswer) {
+  const questionSection = document.getElementById(`q${questionNumber}`);
+  if (questionSection) {
+    const answerDivs = questionSection.childNodes
+    let currentVisibleAnswer = null
+    answerDivs.forEach(div => {
+      if (div.style.display === 'block') {
+        currentVisibleAnswer = parseInt(div.getAttribute('answer'))
+      }
+      div.style.display = 'none'
+    })
+    if (currentVisibleAnswer !== selectedAnswer) {
+      const selectedDiv = questionSection.querySelector(`div[answer="${selectedAnswer}"]`)
+      if (selectedDiv) {
+        selectedDiv.style.display = 'block'
+      }
+    }
+  }
+}
+async function setBaseSelectInputs(){
+  const queryParams = new URLSearchParams(window.location.search)
+  if(queryParams.get('id')){
+    const base_data = await waitForEndData()
+    base_inputs = [...base_data.survey]
+    current_inputs = [...base_data.survey]
+    document.querySelectorAll('#survey select').forEach((select, index) => {
+      if(index < base_inputs.length){
+        select.selectedIndex = base_inputs[index] + 1
+      }
+    })
+  } else {
+    base_inputs = randomizeSelectInputs()
+    loadAndPlayVideos(base_inputs)
+    initMap()
+    fetchLocalData("15243")
+    document.getElementById('reset').style.display = 'none'
+  }
+}
+
+function resetSelectedInputs(){
+  const surveySelects = document.querySelectorAll('#survey select')
+  surveySelects.forEach((select, index) => {
+    if(index < base_inputs.length){
+      select.selectedIndex = base_inputs[index] + 1
+      select.dispatchEvent(new Event('change'))
+    }
+  })
+  current_inputs = [...base_inputs]
+}
+
+function randomizeSelectInputs() {
+  let new_inputs = []
+  const surveySelects = document.querySelectorAll('#survey select')
+
+  surveySelects.forEach(select => {
+    const optionsCount = select.options.length - 1
+    const randomIndex = Math.floor(Math.random() * optionsCount)
+    select.selectedIndex = randomIndex + 1
+    new_inputs.push(randomIndex)
+    select.dispatchEvent(new Event('change'))
+  })
+  current_inputs = new_inputs
+  return new_inputs
+}
+
 // };

@@ -19,7 +19,7 @@ async function loadOverlay() {
 }
 
 async function loadAndPlayVideos(surveyResponse) {
-    const videoClips = ['Intro.mp4', ...surveyResponse.map((ans, i) => `Q${i+1}A${ans+1}.mp4`),
+    videoClips = ['Intro.mp4', ...surveyResponse.map((ans, i) => `Q${i+1}A${ans+1}.mp4`),
         'Outro.mp4'
     ]
     const clipDuration = 30

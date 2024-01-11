@@ -32,6 +32,7 @@ let geocoder
         } else {
           // document.getElementById('localIncentives').style.display = 'none'
         }
+        document.querySelector('.local-focus').style.display = 'block'
         return resp_json;
         } catch (error) {
           document.querySelector('.local-focus').style.display = 'none'
