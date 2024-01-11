@@ -273,10 +273,6 @@ const playButton = document.querySelector('.play-button');
     }
   })
   
-  video.onended = function () {
-    playButton.innerHTML = play;
-  }
-  
   video.ontimeupdate = function () {
     const percentagePosition = (100*video.currentTime) / video.duration;
     timeline.style.backgroundSize = `${percentagePosition}% 100%`;

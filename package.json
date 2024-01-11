@@ -1,6 +1,6 @@
 {
   "name": "lifestylesolarguide",
-  "version": "1.4.3",
+  "version": "1.4.4",
   "description": "Compile script files and push to CDN",
   "main": "setup.js",
   "type": "module",
