@@ -752,10 +752,6 @@ console.error("Error in fetch:", error);
 }
 }
 
-function fetchStateCode(){
-
-}
-
 function formatMK(num){
 if(num >= 1000000){
   return {'num': (num/1000000).toFixed(2), 'suff': 'm'}
@@ -776,11 +772,14 @@ async function setIncentives(incentives){
   incentives.forEach(incentive => {
     const inc_name = incentive.name
     const inc_type = incentive.typeObj.name
-    const inc_sector = incentive.parameterSets[0] ? incentive.parameterSets[0].sectors[0].name : "Other"
+    const inc_sector = incentive.parameterSets[0] ? incentive.parameterSets[0].sectors[0].name : "--"
     const read_more_link = incentive.websiteUrl
+    if(!read_more_link){
+      return
+    }
     let temp_item = inc_sector === "Residential" ? templateItem.cloneNode(true) : templateItemCom.cloneNode(true)
     temp_item.childNodes[0].childNodes[0].textContent = inc_name
-    temp_item.childNodes[1].childNodes[0].textContent = inc_sector
+    inc_sector === "--" ? temp_item.querySelectorAll('.table2_column')[1].textContent = inc_sector : temp_item.childNodes[1].childNodes[0].textContent = inc_sector
     temp_item.childNodes[2].childNodes[0].textContent = inc_type
     read_more_link ? temp_item.childNodes[3].childNodes[0].href = read_more_link : temp_item.childNodes[3].childNodes[0].textContent = ''
     table2List.appendChild(temp_item)
@@ -799,8 +798,6 @@ function set_local_data(local_data){
   document.getElementById('c02').childNodes[1].textContent = co2_tonnage.suff
   document.getElementById('cars').childNodes[1].textContent = car_abatement.suff
   document.getElementById('trees').childNodes[1].textContent = tree_abatement.suff
-  return name_code_mapping[local_data.state_name]
-
 }
 
 async function initMap(zipCode = '15243') {

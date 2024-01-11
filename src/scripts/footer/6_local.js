@@ -50,40 +50,42 @@ let geocoder
         }
         
         async function setIncentives(incentives){
-          let table2List = document.querySelector('.table2_list')
-          let templateItem = table2List.childNodes[0]
-          let templateItemCom = table2List.childNodes[2]
-          while (table2List.firstChild) {
-            table2List.removeChild(table2List.firstChild)
+            let table2List = document.querySelector('.table2_list')
+            let templateItem = table2List.childNodes[0]
+            let templateItemCom = table2List.childNodes[2]
+            while (table2List.firstChild) {
+              table2List.removeChild(table2List.firstChild)
+            }
+            incentives.forEach(incentive => {
+              const inc_name = incentive.name
+              const inc_type = incentive.typeObj.name
+              const inc_sector = incentive.parameterSets[0] ? incentive.parameterSets[0].sectors[0].name : "--"
+              const read_more_link = incentive.websiteUrl
+              if(!read_more_link){
+                return
+              }
+              let temp_item = inc_sector === "Residential" ? templateItem.cloneNode(true) : templateItemCom.cloneNode(true)
+              temp_item.childNodes[0].childNodes[0].textContent = inc_name
+              inc_sector === "--" ? temp_item.querySelectorAll('.table2_column')[1].textContent = inc_sector : temp_item.childNodes[1].childNodes[0].textContent = inc_sector
+              temp_item.childNodes[2].childNodes[0].textContent = inc_type
+              read_more_link ? temp_item.childNodes[3].childNodes[0].href = read_more_link : temp_item.childNodes[3].childNodes[0].textContent = ''
+              table2List.appendChild(temp_item)
+            })
+          
+            return true
           }
-          incentives.forEach(incentive => {
-            const inc_name = incentive.name
-            const inc_type = incentive.typeObj.name
-            const inc_sector = incentive.parameterSets[0] ? incentive.parameterSets[0].sectors[0].name : "Other"
-            const read_more_link = incentive.websiteUrl
-            let temp_item = inc_sector === "Residential" ? templateItem.cloneNode(true) : templateItemCom.cloneNode(true)
-            temp_item.childNodes[0].childNodes[0].textContent = inc_name
-            temp_item.childNodes[1].childNodes[0].textContent = inc_sector
-            temp_item.childNodes[2].childNodes[0].textContent = inc_type
-            read_more_link ? temp_item.childNodes[3].childNodes[0].href = read_more_link : temp_item.childNodes[3].childNodes[0].textContent = ''
-            table2List.appendChild(temp_item)
-          })
-        
-          return true
-        }
-    
-    function set_local_data(local_data){
-      const co2_tonnage = formatMK(local_data.carbon_offset_metric_tons)
-      const tree_abatement = formatMK(local_data.carbon_offset_metric_tons/0.039)
-      const car_abatement = formatMK(local_data.carbon_offset_metric_tons/4.73)
-      document.getElementById('c02').childNodes[0].textContent = co2_tonnage.num
-      document.getElementById('cars').childNodes[0].textContent = car_abatement.num
-      document.getElementById('trees').childNodes[0].textContent = tree_abatement.num
-      document.getElementById('c02').childNodes[1].textContent = co2_tonnage.suff
-      document.getElementById('cars').childNodes[1].textContent = car_abatement.suff
-      document.getElementById('trees').childNodes[1].textContent = tree_abatement.suff
-    
-    }
+          
+          function set_local_data(local_data){
+            const co2_tonnage = formatMK(local_data.carbon_offset_metric_tons)
+            const tree_abatement = formatMK(local_data.carbon_offset_metric_tons/0.039)
+            const car_abatement = formatMK(local_data.carbon_offset_metric_tons/4.73)
+            document.getElementById('c02').childNodes[0].textContent = co2_tonnage.num
+            document.getElementById('cars').childNodes[0].textContent = car_abatement.num
+            document.getElementById('trees').childNodes[0].textContent = tree_abatement.num
+            document.getElementById('c02').childNodes[1].textContent = co2_tonnage.suff
+            document.getElementById('cars').childNodes[1].textContent = car_abatement.suff
+            document.getElementById('trees').childNodes[1].textContent = tree_abatement.suff
+          }
 
 function initMap(zipCode = '15243'){
     zipCode = document.getElementById('zip').textContent
