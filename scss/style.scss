@@ -179,7 +179,7 @@
   .w--current {
     color: black !important;
   }
-  .table2_item:nth-child(even) {
+  .table2_item:nth-child(odd) {
     background-color: #00000008; /* Slightly darker gray for even rows */
 }
 
