@@ -865,7 +865,7 @@ if (window.location.href.indexOf("lsguide.webflow.io") !== -1) {
         map.setCenter(results[0].geometry.location)
         approximate_postcode = results[0].address_components[0].long_name
         if (approximate_postcode) {
-          const zips = [document.getElementById('zip'), document.getElementById('zip2')]
+          const zips = [document.getElementById('zip'), document.getElementById('zip2'), document.getElementById('zip3')]
           zips.forEach((zip) => {
             zip.textContent = approximate_postcode
           })
