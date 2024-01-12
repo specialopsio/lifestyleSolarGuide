@@ -739,10 +739,11 @@
       } else {
         document.getElementById('localStats').style.display = 'none'
       }
-      if (incentives) {
+      if (incentives && endData.incentives && endData.deal.type !== 'loan') {
         setIncentives(incentives)
       } else {
-        // document.getElementById('localIncentives').style.display = 'none'
+        console.debug("END DATA", endData)
+        document.getElementById('localIncentives').style.display = 'none'
       }
       document.querySelector('.local-focus').style.display = 'block'
       return resp_json;
