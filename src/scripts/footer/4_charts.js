@@ -2,8 +2,8 @@ function createCharts() {
     const averageBillData = []
     let lastBill = endData && endData.bill ? parseInt(endData.bill) : 165
     const intervals = 10
-    const yearsPerInterval = 2
-    const pointsPerInterval = 4
+    const yearsPerInterval = 2.5
+    const pointsPerInterval = 5
     const totalPoints = intervals *
         pointsPerInterval
     const annualIncreaseRate = 0.037
@@ -204,7 +204,7 @@ document.addEventListener("DOMContentLoaded", () => {
             "#charts element found. Starting to observe."
         )
         observer.observe(factsElement);
-        createCharts()
+        // createCharts()
     } else {
         console.error(
             'Element with ID #charts not found.');

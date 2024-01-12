@@ -52,7 +52,9 @@
     rawText = rawText
       .replace(/\[,/g, "[null,")
       .replace(/,\]/g, ",null]")
-      .replace(/,,/g, ",null,");
+      .replace(/,,/g, ",null,")
+      .replace(/[“”"]/g, '"')
+      .replace(/\u00A0/g, ' ');
     rawText = rawText.replace(/:\s*,/g, ": null,");
     return rawText;
   }
@@ -78,7 +80,7 @@
     document.getElementById("zip").textContent = safeRetrieve(data, "zip");
     document.getElementById("zip2").textContent = safeRetrieve(data, "zip");
     document.getElementById("zip3").textContent = safeRetrieve(data, "zip");
-    updateRepresentativeInfo(data.rep || {});
+    updateRepresentativeInfo(data.rep || data.deal.rep || {});
   }
 
   function updateRepresentativeInfo(rep) {
@@ -447,10 +449,10 @@
 
   function createCharts() {
     const averageBillData = []
-    let lastBill = endData && endData.bill ? parseInt(endData.bill) : 165
+    let lastBill = 165 //endData && endData.bill ? parseInt(endData.bill) : 165
     const intervals = 10
-    const yearsPerInterval = 2
-    const pointsPerInterval = 4
+    const yearsPerInterval = 2.5
+    const pointsPerInterval = 5
     const totalPoints = intervals *
       pointsPerInterval
     const annualIncreaseRate = 0.037
@@ -529,7 +531,7 @@
           },
           y: {
             min: 50,
-            max: 400,
+            max: 500,
             stepSize: 50,
             title: {
               display: true,
@@ -591,7 +593,6 @@
         }]
       }
     })
-
     const solarBillChart = new Chart(document.getElementById(
       'solarBillChart').getContext('2d'), {
       ...options,
@@ -651,7 +652,7 @@
         "#charts element found. Starting to observe."
       )
       observer.observe(factsElement);
-      createCharts()
+      // createCharts()
     } else {
       console.error(
         'Element with ID #charts not found.');
@@ -717,6 +718,7 @@
       if (data && data.zip) {
         initMap(endData.zip)
         fetchLocalData(endData.zip)
+        createCharts()
       } else {
         setTimeout(waitForZip, 100)
       }

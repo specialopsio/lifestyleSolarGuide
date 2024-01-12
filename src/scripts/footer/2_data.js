@@ -35,7 +35,9 @@
             rawText = rawText
                 .replace(/\[,/g, "[null,")
                 .replace(/,\]/g, ",null]")
-                .replace(/,,/g, ",null,");
+                .replace(/,,/g, ",null,")
+                .replace(/[“”"]/g, '"')
+                .replace(/\u00A0/g, ' ');
             rawText = rawText.replace(/:\s*,/g, ": null,");
             return rawText;
         }
@@ -61,7 +63,7 @@
             document.getElementById("zip").textContent = safeRetrieve(data, "zip");
             document.getElementById("zip2").textContent = safeRetrieve(data, "zip");
             document.getElementById("zip3").textContent = safeRetrieve(data, "zip");
-            updateRepresentativeInfo(data.rep || {});
+            updateRepresentativeInfo(data.rep || data.deal.rep || {});
         }
 
         function updateRepresentativeInfo(rep) {
