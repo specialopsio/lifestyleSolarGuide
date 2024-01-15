@@ -27,7 +27,7 @@ let geocoder
         } else {
           document.getElementById('localStats').style.display = 'none'
         }
-        if (incentives && endData.incentives && endData.deal.type !== 'loan') {
+        if (incentives && endData && endData.incentives && endData.deal.type !== 'loan') {
             setIncentives(incentives)
         } else {
             document.getElementById('localIncentives').style.display = 'none'
@@ -138,7 +138,7 @@ function initMap(zipCode = '15203'){
     geocoder.geocode({ 'address': zipCode }, function(results, status) {
         if (status == 'OK') {
             map.setCenter(results[0].geometry.location)
-            approximate_postcode = results[0].postcode_localities[0] ? results[0].postcode_localities[0] : results[0].address_components[0].long_name
+            approximate_postcode = results[0].postcode_localities ? results[0].postcode_localities[0] : results[0].address_components[0].long_name
             if(approximate_postcode){
                 const zips = [document.getElementById('zip'), document.getElementById('zip2'), document.getElementById('zip3')]
                 zips.forEach((zip) => {

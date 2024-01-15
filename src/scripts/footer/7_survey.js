@@ -77,6 +77,7 @@ function waitForEndData() {
       loadAndPlayVideos(base_inputs)
       initMap()
       fetchLocalData("15203")
+      createCharts()
       document.getElementById('reset').style.display = 'none'
     }
   }

@@ -449,7 +449,7 @@
 
   function createCharts() {
     const averageBillData = []
-    let lastBill = 165 //endData && endData.bill ? parseInt(endData.bill) : 165
+    let lastBill = 165 //endData && endData.bill ? endData.bill.amount ? parseInt(endData.bill.amount) : parseInt(endData.bill) : 165
     const intervals = 10
     const yearsPerInterval = 2.5
     const pointsPerInterval = 5
@@ -739,10 +739,9 @@
       } else {
         document.getElementById('localStats').style.display = 'none'
       }
-      if (incentives && endData.incentives && endData.deal.type !== 'loan') {
+      if (incentives && endData && endData.incentives && endData.deal.type !== 'loan') {
         setIncentives(incentives)
       } else {
-        console.debug("END DATA", endData)
         document.getElementById('localIncentives').style.display = 'none'
       }
       document.querySelector('.local-focus').style.display = 'block'
@@ -865,7 +864,7 @@
     }, function(results, status) {
       if (status == 'OK') {
         map.setCenter(results[0].geometry.location)
-        approximate_postcode = results[0].postcode_localities[0] ? results[0].postcode_localities[0] : results[0].address_components[0].long_name
+        approximate_postcode = results[0].postcode_localities ? results[0].postcode_localities[0] : results[0].address_components[0].long_name
         if (approximate_postcode) {
           const zips = [document.getElementById('zip'), document.getElementById('zip2'), document.getElementById('zip3')]
           zips.forEach((zip) => {
@@ -1020,6 +1019,7 @@
       loadAndPlayVideos(base_inputs)
       initMap()
       fetchLocalData("15203")
+      createCharts()
       document.getElementById('reset').style.display = 'none'
     }
   }
