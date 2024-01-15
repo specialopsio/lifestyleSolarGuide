@@ -16,29 +16,31 @@ let geocoder
     }
     
     async function fetchLocalData(zipCode) {
-        const url = `https://rk2ou3xhpk.execute-api.us-east-1.amazonaws.com/default/fetchPostal?zipCode=${zipCode}`;
-        try {
+      const url = `https://rk2ou3xhpk.execute-api.us-east-1.amazonaws.com/default/fetchPostal?zipCode=${zipCode}`;
+      try {
         let stateCode;
         const response = await fetch(url);
         const resp_json = await response.json();
         const incentives = resp_json.incentives.data
-        if(resp_json.carbon_offset_metric_tons){
+        if (resp_json.carbon_offset_metric_tons) {
           stateCode = set_local_data(resp_json)
         } else {
           document.getElementById('localStats').style.display = 'none'
         }
         if (incentives && endData && endData.incentives && endData.deal.type !== 'loan') {
-            setIncentives(incentives)
+          setIncentives(incentives)
+        } else if( !endData || (endData && endData.incentives !== 'undefined')){
+          setIncentives(incentives)
         } else {
-            document.getElementById('localIncentives').style.display = 'none'
+          document.getElementById('localIncentives').style.display = 'none'
         }
         document.querySelector('.local-focus').style.display = 'block'
         return resp_json;
-        } catch (error) {
-          document.querySelector('.local-focus').style.display = 'none'
+      } catch (error) {
+        document.querySelector('.local-focus').style.display = 'none'
         console.error("Error in fetch:", error);
-        }
-        }
+      }
+    }
         
         function formatMK(num){
         if(num >= 1000000){

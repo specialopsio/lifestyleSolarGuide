@@ -524,10 +524,11 @@
             ticks: {
               callback: function(value) {
                 if (value % 2 === 0)
-                  return value;
+                  return value + 1;
               },
-              stepSize: 2
-            }
+              stepSize: 1
+            },
+            max: 25
           },
           y: {
             min: 50,
@@ -740,6 +741,8 @@
         document.getElementById('localStats').style.display = 'none'
       }
       if (incentives && endData && endData.incentives && endData.deal.type !== 'loan') {
+        setIncentives(incentives)
+      } else if( !endData || (endData && endData.incentives !== 'undefined')){
         setIncentives(incentives)
       } else {
         document.getElementById('localIncentives').style.display = 'none'
