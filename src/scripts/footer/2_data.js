@@ -78,7 +78,7 @@
             // Update phone
             if (rep.phone) {
                 const formattedPhone = rep.phone.replace(/[ \(\)\-\+]/g, "");
-                repPhoneElement.textContent = rep.phone;
+                // repPhoneElement.textContent = rep.phone;
                 repPhoneElement.href = `tel:${formattedPhone}`;
                 repPhoneElement.style.display = "block";
             } else {
