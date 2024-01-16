@@ -998,11 +998,9 @@
         }
         div.style.display = 'none'
       })
-      if (currentVisibleAnswer !== selectedAnswer) {
-        const selectedDiv = questionSection.querySelector(`div[answer="${selectedAnswer}"]`)
-        if (selectedDiv) {
-          selectedDiv.style.display = 'block'
-        }
+      const selectedDiv = questionSection.querySelector(`div[answer="${selectedAnswer}"]`)
+      if (selectedDiv) {
+        selectedDiv.style.display = 'block'
       }
     }
   }
