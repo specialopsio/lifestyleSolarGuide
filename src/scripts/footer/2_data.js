@@ -83,7 +83,7 @@
                 repPhoneElement.style.display = "block";
             } else {
                 repPhoneElement.style.display = "none";
-                document.getElementById("contactRepPhoneContainer").style.display = "none";
+                // document.getElementById("contactRepPhoneContainer").style.display = "none";
             }
 
             // Update email
