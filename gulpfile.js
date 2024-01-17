@@ -72,6 +72,7 @@ async function getStripDebug() {
 // SCSS to CSS conversion
 const scssToCss = () => {
   return gulp.src('./scss/**/*.scss')
+    .pipe(concat('combined.scss'))
     .pipe(sass().on('error', sass.logError))
     .pipe(rename('style.min.css'))
     .pipe(uglifycss({ "uglyComments": true }))
