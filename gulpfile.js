@@ -201,6 +201,7 @@ gulp.task('commit-prod', commitAndPushSpecificFile('./dist/prod.js'))
 gulp.task('commit-staging', commitAndPushSpecificFile('./dist/staging.js'))
 
 gulp.task('commit-dist', commitAndPushSpecificFile('./dist/*'));
+gulp.task('commit-scss', commitAndPushSpecificFile('./scss/*'))
 
 // Task to commit 'scripts' directory
 gulp.task('commit-scripts', commitAndPushSpecificFile('./src/scripts/*'));
@@ -215,6 +216,9 @@ gulp.task('build-prod', gulp.series(bumpVersion('production'), async function() 
   await processScriptsForProd('prod.js', 'head');
 }));
 
+gulp.task('scssToCss', function(){
+  scssToCss()
+})
 
 gulp.task('combine-embeds', async function () {
   combineImportsAndEmbed('footer')
@@ -231,12 +235,12 @@ gulp.task('build-staging', gulp.series(bumpVersion('staging'), async function() 
   await processScriptsForStaging('staging.js', 'head');
 }));
 
-gulp.task('build-prod-commit', gulp.series('build-prod', 'commit-dist', 'commit-scripts'))
-gulp.task('build-staging-commit', gulp.series('build-staging', 'commit-dist', 'commit-scripts'))
+gulp.task('build-prod-commit', gulp.series('build-prod', 'commit-dist', 'commit-scripts', 'commit-scss'))
+gulp.task('build-staging-commit', gulp.series('build-staging', 'commit-dist', 'commit-scripts', 'commit-scss'))
 
-gulp.task('commit-all', gulp.parallel('commit-dist', 'commit-scripts'))
+gulp.task('commit-all', gulp.parallel('commit-dist', 'commit-scripts', 'commit-scss'))
 
-gulp.task('build-commit-all', gulp.series(gulp.parallel('build-prod', 'build-staging'), 'commit-all', 'combine-embeds'))
+gulp.task('build-commit-all', gulp.series(gulp.parallel('build-prod', 'build-staging'), 'commit-all', 'combine-embeds', 'commit-scss'))
 
 // Default task
-gulp.task('default', gulp.series('build-prod', 'build-staging', 'combine-embeds', 'commit-dist', 'commit-scripts'));
+gulp.task('default', gulp.series('build-prod', 'build-staging', 'combine-embeds', 'commit-dist', 'commit-scripts', 'commit-scss'));
