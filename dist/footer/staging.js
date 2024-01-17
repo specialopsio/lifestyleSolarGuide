@@ -1,4 +1,4 @@
-// if (window.location.href.indexOf("lsguide.webflow.io") !== -1) {
+if (window.location.href.indexOf("lsguide.webflow.io") !== -1) {
   const play = `<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
 <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd" />
 </svg>`;
@@ -153,6 +153,7 @@
       }
     }
   }
+
   let isFullScreen = false
   let isPaused = false
   let isMuted = false
@@ -719,7 +720,6 @@
       if (data && data.zip) {
         initMap(endData.zip)
         fetchLocalData(endData.zip)
-        createCharts()
       } else {
         setTimeout(waitForZip, 100)
       }
@@ -742,7 +742,7 @@
       }
       if (incentives && endData && endData.incentives && endData.deal.type !== 'loan') {
         setIncentives(incentives)
-      } else if( !endData || (endData && endData.incentives !== 'undefined')){
+      } else if (!endData || (endData && endData.incentives !== 'undefined')) {
         setIncentives(incentives)
       } else {
         document.getElementById('localIncentives').style.display = 'none'
@@ -1017,10 +1017,10 @@
       })
     } else {
       const ref_default = {
-          "name" : "Stephanie Olsen",
-          "phone" : "+1 (555) 555-5555",
-          "email" : "solsen@lifestylemarketing.com",
-          "picture" : "https://files.monday.com/use1/photos/26311388/thumb/26311388-user_photo_2023_09_28_00_28_45.png?1695860926"
+        "name": "Stephanie Olsen",
+        "phone": "+1 (555) 555-5555",
+        "email": "solsen@lifestylemarketing.com",
+        "picture": "https://files.monday.com/use1/photos/26311388/thumb/26311388-user_photo_2023_09_28_00_28_45.png?1695860926"
       }
       updateRepresentativeInfo(ref_default)
       base_inputs = randomizeSelectInputs()
@@ -1057,4 +1057,4 @@
     current_inputs = new_inputs
     return new_inputs
   }
-// };
+};
