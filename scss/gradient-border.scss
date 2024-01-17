@@ -1,27 +1,22 @@
+@keyframes rotate {
+  to {
+    --angle: 360deg;
+  }
+}
+
+@property --angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+
 .gradient-border {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  
-  
-    border: 2px solid #0000;
-    border-radius: 12px;
-    background: linear-gradient(#fff, #fff) padding-box, linear-gradient(
-          var(--angle),
-          #007fba,
-          #46d3a8
-        ) border-box;
-    animation: 4s rotate linear infinite;
-  }
-  
-  @keyframes rotate {
-    to {
-      --angle: 360deg;
-    }
-  }
-  
-  @property --angle {
-    syntax: "<angle>";
-    initial-value: 0deg;
-    inherits: false;
-  }
+  --angle: 0deg; /* Initialize the variable */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 2px solid rgba(0,0,0,0);
+  border-radius: 12px;
+  background: linear-gradient(var(--angle), #007fba, #46d3a8) padding-box, linear-gradient(#fff, #fff) border-box;
+  animation: rotate 4s linear infinite;
+}
