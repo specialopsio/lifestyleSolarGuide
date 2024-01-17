@@ -190,7 +190,7 @@ function processScriptsForStaging(fileName, section) {
   return gulp.src(`./src/scripts/${section}/*.js`)
     .pipe(sort())
     .pipe(concat('combined.js'))
-    // .pipe(wrap(`if (window.location.href.indexOf("${domain}") !== -1) {<%= contents %>};`))
+    .pipe(wrap(`if (window.location.href.indexOf("${domain}") !== -1) {<%= contents %>};`))
     .pipe(jsbeautifier({ indent_size: 2 }))
     .pipe(concat(`${fileName}`))
     .pipe(gulp.dest(`./dist/${section}`));
