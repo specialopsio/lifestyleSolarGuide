@@ -1,12 +1,12 @@
-let map
-let geocoder
+window.map
+window.geocoder
     function initLocal() {
 
     function waitForZip() {
-        const data = endData
+        const data = window.endData
         if (data && data.zip) {
-            initMap(endData.zip)
-            fetchLocalData(endData.zip)
+            initMap(window.endData.zip)
+            fetchLocalData(window.endData.zip)
         } else {
             setTimeout(waitForZip, 100)
         }
@@ -27,9 +27,9 @@ let geocoder
         } else {
           document.getElementById('localStats').style.display = 'none'
         }
-        if (incentives && endData && endData.incentives && endData.deal.type !== 'loan') {
+        if (incentives && window.endData && window.endData.incentives && window.endData.deal.type !== 'loan') {
           setIncentives(incentives)
-        } else if( !endData || (endData && endData.incentives !== 'undefined')){
+        } else if( !window.endData || (window.endData && window.endData.incentives !== 'undefined')){
           setIncentives(incentives)
         } else {
           document.getElementById('localIncentives').style.display = 'none'
@@ -139,7 +139,7 @@ function initMap(zipCode = '15203'){
     }
     geocoder.geocode({ 'address': zipCode }, function(results, status) {
         if (status == 'OK') {
-            map.setCenter(results[0].geometry.location)
+            window.map.setCenter(results[0].geometry.location)
             approximate_postcode = results[0].postcode_localities ? results[0].postcode_localities[0] : results[0].address_components[0].long_name
             if(approximate_postcode){
                 const zips = [document.getElementById('zip'), document.getElementById('zip2'), document.getElementById('zip3')]
@@ -160,7 +160,7 @@ function initMap(zipCode = '15203'){
     map_div.style.borderRadius = '1rem'
     map_div.style.border = 'none'
     default_map.style.display = 'none'
-    map = new google.maps.Map(map_div, mapOptions)
+    window.map = new google.maps.Map(map_div, mapOptions)
     map_container.appendChild(map_div)
 
     return true
@@ -184,18 +184,18 @@ function smoothZoom(map, targetZoom, duration) {
     }, 50)
 }
 function zoomToZipCode() {
-    smoothZoom(map, 15, 5000);
+    smoothZoom(window.map, 15, 5000);
 }
 function onIntersection(entries) {
     entries.forEach(entry => {
         if (entry.isIntersecting) {
             zoomToZipCode('15203')
-            observer_two.unobserve(entry.target)
+            window.observer_two.unobserve(entry.target)
         }
     })
 }
 
-let observer_two = new IntersectionObserver(onIntersection, {
+window.observer_two = new IntersectionObserver(onIntersection, {
     threshold: 0.5
 })
 
@@ -207,7 +207,7 @@ document.addEventListener("DOMContentLoaded", () => {
         console.log(
             "#maps element found. Starting to observe."
         )
-        observer_two.observe(factsElement);
+        window.observer_two.observe(factsElement);
     } else {
         console.error(
             'Element with ID #localMap not found.');

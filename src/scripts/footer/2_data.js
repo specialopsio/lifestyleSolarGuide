@@ -17,7 +17,7 @@
                 updateHtmlWithData(data);
                 displaySelectedAnswers(data.survey);
                 updateDisplayAfterFetch();
-                endData = data
+                window.endData = data
 
                 // Load and play videos based on survey response
                 loadAndPlayVideos(data.survey);
@@ -131,7 +131,9 @@
                         const answerNumber = parseInt(div.getAttribute('answer'));
                         if (answerNumber !== selectedAnswer) {
                             div.style.display = 'none';
-                        }
+                        } else {
+                            div.style.display = 'block';
+                          }
                     });
                 }
             }

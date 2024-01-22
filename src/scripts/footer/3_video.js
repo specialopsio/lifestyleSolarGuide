@@ -1,7 +1,7 @@
-let isFullScreen = false
-let isPaused = false
-let isMuted = false
-let vidPaused = false
+window.isFullScreen = false
+window.isPaused = false
+window.isMuted = false
+window.vidPaused = false
 
 async function loadOverlay() {
     const vidCon = document.querySelector('.video-player')

@@ -1,7 +1,7 @@
 function waitForEndData() {
     return new Promise((resolve, reject) => {
       const checkData = () => {
-        const data = endData
+        const data = window.endData
         if (data && data.survey) {
           resolve(data)
         } else {
@@ -22,7 +22,7 @@ function waitForEndData() {
     const selectedIndex = event.target.selectedIndex
     const selectIndex = Array.from(surveySelects).indexOf(event.target)
     current_inputs[selectIndex] = selectedIndex
-    endData ? endData.survey[selectIndex] = selectedIndex : ''
+    window.endData ? window.endData.survey[selectIndex] = selectedIndex : ''
     videoClips = ['Intro.mp4', ...current_inputs.map((ans, i) => `Q${i+1}A${ans}.mp4`),
           'Outro.mp4'
       ]

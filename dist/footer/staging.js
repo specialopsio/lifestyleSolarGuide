@@ -1,20 +1,20 @@
 if (window.location.href.indexOf("lsguide.webflow.io") !== -1) {
-  const play = `<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+  window.play = `<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
 <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd" />
 </svg>`;
-  const pause = `<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+  window.pause = `<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 9v6m4-6v6m7-3a9 9 0 11-18 0 9 9 0 0118 0z" />
 </svg>`;
-  const sound = `<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+  window.sound = `<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
 </svg>`;
-  const mute = `<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+  window.mute = `<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" clip-rule="evenodd" />
 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2" />
 </svg>`;
-  const thumbnailUrl = 'https://solarguidevideos.s3.us-east-2.amazonaws.com/thumbail2.jpg';
-  let videoClips = ['Intro.mp4', `Q1A1.mp4`, `Q2A1.mp4`, `Q3A1.mp4`, `Q4A1.mp4`, 'Outro.mp4']
-  let endData
+  window.thumbnailUrl = 'https://solarguidevideos.s3.us-east-2.amazonaws.com/thumbail2.jpg';
+  window.videoClips = ['Intro.mp4', `Q1A1.mp4`, `Q2A1.mp4`, `Q3A1.mp4`, `Q4A1.mp4`, 'Outro.mp4']
+  window.endData
   // Function to extract 'id' query parameter from the URL
   function getCustomerIdFromUrl() {
     const queryParams = new URLSearchParams(window.location.search);
@@ -34,7 +34,7 @@ if (window.location.href.indexOf("lsguide.webflow.io") !== -1) {
       updateHtmlWithData(data);
       displaySelectedAnswers(data.survey);
       updateDisplayAfterFetch();
-      endData = data
+      window.endData = data
 
       // Load and play videos based on survey response
       loadAndPlayVideos(data.survey);
@@ -148,16 +148,17 @@ if (window.location.href.indexOf("lsguide.webflow.io") !== -1) {
           const answerNumber = parseInt(div.getAttribute('answer'));
           if (answerNumber !== selectedAnswer) {
             div.style.display = 'none';
+          } else {
+            div.style.display = 'block';
           }
         });
       }
     }
   }
-
-  let isFullScreen = false
-  let isPaused = false
-  let isMuted = false
-  let vidPaused = false
+  window.isFullScreen = false
+  window.isPaused = false
+  window.isMuted = false
+  window.vidPaused = false
 
   async function loadOverlay() {
     const vidCon = document.querySelector('.video-player')
@@ -710,16 +711,17 @@ if (window.location.href.indexOf("lsguide.webflow.io") !== -1) {
       requestAnimationFrame(tick);
     }
   });
-  let map
-  let geocoder
+  window.map
+  window.geocoder
 
   function initLocal() {
 
     function waitForZip() {
-      const data = endData
+      const data = window.endData
       if (data && data.zip) {
-        initMap(endData.zip)
-        fetchLocalData(endData.zip)
+        initMap(window.endData.zip)
+        fetchLocalData(window.endData.zip)
+        createCharts()
       } else {
         setTimeout(waitForZip, 100)
       }
@@ -740,9 +742,9 @@ if (window.location.href.indexOf("lsguide.webflow.io") !== -1) {
       } else {
         document.getElementById('localStats').style.display = 'none'
       }
-      if (incentives && endData && endData.incentives && endData.deal.type !== 'loan') {
+      if (incentives && window.endData && window.endData.incentives && window.endData.deal.type !== 'loan') {
         setIncentives(incentives)
-      } else if (!endData || (endData && endData.incentives !== 'undefined')) {
+      } else if( !window.endData || (window.endData && window.endData.incentives !== 'undefined')){
         setIncentives(incentives)
       } else {
         document.getElementById('localIncentives').style.display = 'none'
@@ -866,7 +868,7 @@ if (window.location.href.indexOf("lsguide.webflow.io") !== -1) {
       'address': zipCode
     }, function(results, status) {
       if (status == 'OK') {
-        map.setCenter(results[0].geometry.location)
+        window.map.setCenter(results[0].geometry.location)
         approximate_postcode = results[0].postcode_localities ? results[0].postcode_localities[0] : results[0].address_components[0].long_name
         if (approximate_postcode) {
           const zips = [document.getElementById('zip'), document.getElementById('zip2'), document.getElementById('zip3')]
@@ -887,7 +889,7 @@ if (window.location.href.indexOf("lsguide.webflow.io") !== -1) {
     map_div.style.borderRadius = '1rem'
     map_div.style.border = 'none'
     default_map.style.display = 'none'
-    map = new google.maps.Map(map_div, mapOptions)
+    window.map = new google.maps.Map(map_div, mapOptions)
     map_container.appendChild(map_div)
 
     return true
@@ -912,7 +914,7 @@ if (window.location.href.indexOf("lsguide.webflow.io") !== -1) {
   }
 
   function zoomToZipCode() {
-    smoothZoom(map, 15, 5000);
+    smoothZoom(window.map, 15, 5000);
   }
 
   function onIntersection(entries) {
@@ -924,7 +926,7 @@ if (window.location.href.indexOf("lsguide.webflow.io") !== -1) {
     })
   }
 
-  let observer_two = new IntersectionObserver(onIntersection, {
+  window.observer_two = new IntersectionObserver(onIntersection, {
     threshold: 0.5
   })
 
@@ -946,7 +948,7 @@ if (window.location.href.indexOf("lsguide.webflow.io") !== -1) {
   function waitForEndData() {
     return new Promise((resolve, reject) => {
       const checkData = () => {
-        const data = endData
+        const data = window.endData
         if (data && data.survey) {
           resolve(data)
         } else {
@@ -967,7 +969,7 @@ if (window.location.href.indexOf("lsguide.webflow.io") !== -1) {
       const selectedIndex = event.target.selectedIndex
       const selectIndex = Array.from(surveySelects).indexOf(event.target)
       current_inputs[selectIndex] = selectedIndex
-      endData ? endData.survey[selectIndex] = selectedIndex : ''
+      window.endData ? window.endData.survey[selectIndex] = selectedIndex : ''
       videoClips = ['Intro.mp4', ...current_inputs.map((ans, i) => `Q${i+1}A${ans}.mp4`),
         'Outro.mp4'
       ]
@@ -1017,10 +1019,10 @@ if (window.location.href.indexOf("lsguide.webflow.io") !== -1) {
       })
     } else {
       const ref_default = {
-        "name": "Stephanie Olsen",
-        "phone": "+1 (555) 555-5555",
-        "email": "solsen@lifestylemarketing.com",
-        "picture": "https://files.monday.com/use1/photos/26311388/thumb/26311388-user_photo_2023_09_28_00_28_45.png?1695860926"
+          "name" : "Stephanie Olsen",
+          "phone" : "+1 (555) 555-5555",
+          "email" : "solsen@lifestylemarketing.com",
+          "picture" : "https://files.monday.com/use1/photos/26311388/thumb/26311388-user_photo_2023_09_28_00_28_45.png?1695860926"
       }
       updateRepresentativeInfo(ref_default)
       base_inputs = randomizeSelectInputs()
