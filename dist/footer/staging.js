@@ -981,12 +981,12 @@ if (window.location.href.indexOf("lsguide.webflow.io") !== -1) {
       select.addEventListener('change', handleSelectChange)
     })
 
-    await setBaseSelectInputs()
     document.getElementById('random').addEventListener('click', randomizeSelectInputs)
     document.getElementById('reset').addEventListener('click', resetSelectedInputs)
     if (queryParams.get("admin") || queryParams.get('id') === 'admin') {
       document.getElementById('survey').style.display = 'block'
     }
+    await setBaseSelectInputs()
   })
 
   function displaySelectedAnswer(questionNumber, selectedAnswer) {
