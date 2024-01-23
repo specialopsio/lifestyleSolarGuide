@@ -1027,9 +1027,9 @@ if (window.location.href.indexOf("lsguide.webflow.io") !== -1) {
       updateRepresentativeInfo(ref_default)
       base_inputs = randomizeSelectInputs()
       loadAndPlayVideos(base_inputs)
+      createCharts()
       initMap()
       fetchLocalData("15203")
-      createCharts()
       document.getElementById('reset').style.display = 'none'
     }
   }
