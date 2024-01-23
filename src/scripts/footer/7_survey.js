@@ -77,13 +77,13 @@ function waitForEndData() {
         "email" : "solsen@lifestylemarketing.com",
         "picture" : "https://files.monday.com/use1/photos/26311388/thumb/26311388-user_photo_2023_09_28_00_28_45.png?1695860926"
       }
+      document.getElementById('reset').style.display = 'none'
       updateRepresentativeInfo(ref_default)
       base_inputs = randomizeSelectInputs()
       loadAndPlayVideos(base_inputs)
+      createCharts()
       initMap()
       fetchLocalData("15203")
-      createCharts()
-      document.getElementById('reset').style.display = 'none'
     }
   }
   
